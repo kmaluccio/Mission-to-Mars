@@ -11,13 +11,18 @@ def scrape_all():
     browser = Browser('chrome',**executable_path,headless=True)
 
     news_title, news_paragraph = mars_news(browser)
+    hemisphere_urls_titles = hemisphere_data(browser)
 
     # Run all scraping functions and store results in dictionary
     data = {"news_title": news_title,
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()}
+        "last_modified": dt.datetime.now(),
+        "image url":hemisphere_urls_titles[0]['image url'], "image title": hemisphere_urls_titles[0]['title'],
+        "image url":hemisphere_urls_titles[1]['image url'], "image title": hemisphere_urls_titles[1]['title'],
+        "image url":hemisphere_urls_titles[2]['image url'], "image title": hemisphere_urls_titles[2]['title'],
+        "image url":hemisphere_urls_titles[3]['image url'], "image title": hemisphere_urls_titles[3]['title']}
     
     # Stop webdriver and return data
     browser.quit()
@@ -79,7 +84,7 @@ def mars_facts():
     # Add try/except for error handling
     try:
         # Use read_html to scrape the facts table into a dataframe
-        df = pd.read_html('https://data-class-mars-facts.s3.amazonaws.com/Mars_Facts/index.html')[0]
+        df = pd.read_html('https://galaxyfacts-mars.com')[0]
 
     except BaseException:
         return None
@@ -90,6 +95,27 @@ def mars_facts():
 
     # Convert dataframe into HTML format and return
     return df.to_html(classes="table table-striped")
+
+def hemisphere_data(browser):
+    # 1. Visit url using browser
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+    
+    html = browser.html
+    bs = soup(html,'html.parser')
+
+    # 2. Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # 3. Write code to retrieve the image urls and titles for each hemisphere.
+    for i in range(4):
+        rel_img_path = bs.find_all('img',class_='thumb')[i]['src']
+        rel_img_title = bs.find_all('img')[i]['alt']
+        image_dict = {'image url':url+rel_img_path,'title':rel_img_title}
+        hemisphere_image_urls.append(image_dict)
+
+    # 4. Print the list that holds the dictionary of each image url and title.
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
     # If running as script, print scraped data
