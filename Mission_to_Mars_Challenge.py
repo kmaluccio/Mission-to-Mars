@@ -81,7 +81,8 @@ bs = soup(html,'html.parser')
 hemisphere_image_urls = []
 
 # 3. Write code to retrieve the image urls and titles for each hemisphere.
-# in for loop we should use bs.find('div',class_='item')
+# in for loop we should use range(len(bs.find('div',class_='item'))), but this gives errors so we checked
+# the length in the ipynb file and used range(num) where num=len(bs.find('div',class_='item))=4
 for i in range(4):
     # Create empty dictionary to store urls and titles for full images
     hemispheres = {}
