@@ -81,6 +81,7 @@ bs = soup(html,'html.parser')
 hemisphere_image_urls = []
 
 # 3. Write code to retrieve the image urls and titles for each hemisphere.
+# in for loop we should use bs.find('div',class_='item')
 for i in range(4):
     # Create empty dictionary to store urls and titles for full images
     hemispheres = {}
