@@ -19,8 +19,6 @@ def scrape_all():
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
         "hemispheres": hemispheres,
-        # "img_url":[hemispheres[0]['img_url'],hemispheres[1]['img_url'],hemispheres[2]['img_url'], hemispheres[3]['img_url']],
-        # "title":[hemispheres[0]['title'],hemispheres[1]['title'],hemispheres[2]['title'],hemispheres[3]['title']],
         "last_modified": dt.datetime.now()}
     # Stop webdriver and return data
     browser.quit()
@@ -82,11 +80,10 @@ def mars_facts():
     # Add try/except for error handling
     try:
         # Use read_html to scrape the facts table into a dataframe
-        df = pd.read_html('https://galaxyfacts-mars.com')[0]
+        df = pd.read_html('http://data-class-mars-facts.s3.amazonaws.com/Mars_Facts/index.html')[0]
 
     except BaseException:
         return None
-
     # Assign columns and set the index of the dataframe
     df.columns=['Description','Mars','Earth']
     df.set_index('Description',inplace=True)
